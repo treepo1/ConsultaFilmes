@@ -2,7 +2,7 @@ import NavBar from "../navbar";
 import {useParams} from 'react-router-dom'
 import { useEffect, useState } from "react";
 import axios from 'axios';
-import { Card } from "react-bootstrap";
+import { Card, Spinner } from "react-bootstrap";
 import {Container, Badge }from "react-bootstrap";
 import { NumericFormat } from "react-number-format";
 import { AiFillStar } from "react-icons/ai";
@@ -24,18 +24,24 @@ function MovieDetails(props) {
         title:'Indisponível',
         tagline:'Indisponível'
     })
+    const [loading, setLoading] = useState(true)
     useEffect(() => {
         const getDetails = async () => {
             const details = await axios.get(`https://api.themoviedb.org/3/movie/${urlParams.id}?api_key=d49de9500030e9647cb9119bd7cb3b2c&language=pt-BR&append_to_response=videos`)
             console.log(details)
             setDetails(details.data)
         }
+        setLoading(true)
         getDetails()
+        setLoading(false)
     }, [])
     const urlParams = useParams()
     return (
         <>
         <NavBar/>
+        {loading ? 
+        <Spinner animation="border" ></Spinner>
+        :
         <Container style={{display:'flex', margin:'20px'}}>
         <div style={{display:'flex', gap:'10px'}}>
             <div>
@@ -83,6 +89,8 @@ function MovieDetails(props) {
         </div>
         </div>
         </Container>
+        }
+        
         </>
     )
 }

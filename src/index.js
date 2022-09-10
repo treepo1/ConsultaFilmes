@@ -4,6 +4,7 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import ThemeProvider from 'react-bootstrap/ThemeProvider'
+import { MoviesProvider } from './contexts/MoviesContext';
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -13,7 +14,9 @@ root.render(
   breakpoints={['xxxl', 'xxl', 'xl', 'lg', 'md', 'sm', 'xs', 'xxs']}
   minBreakpoint="xxs"
 >
+  <MoviesProvider>
 <App />
+</MoviesProvider>
 </ThemeProvider>
 
   </React.StrictMode>

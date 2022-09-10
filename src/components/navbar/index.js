@@ -5,16 +5,18 @@ import {BsSearch} from 'react-icons/bs'
 import Button from 'react-bootstrap/esm/Button';
 import Form from 'react-bootstrap/Form';
 import axios from 'axios';
+import { useContext } from 'react';
+import { MoviesContext } from '../../contexts/MoviesContext';
+import { useNavigate } from 'react-router-dom';
 
 
 
 function NavBar(props) {
   
-  const handleSearch = (query) => {
-    axios.get(`
-    https://api.themoviedb.org/3/search/movie?api_key=${process.env.REACT_APP_MOVIE_DB_API_KEY}&language=pt-BR&query=${query}&page=1&include_adult=false`).then((res) => {
-      props.result = res.data.results
-    })
+  const { searchFor } = useContext(MoviesContext)
+  const handleSearch = async (query,ev) => { 
+    ev.preventDefault()
+    searchFor(query)
   }
     return (
         <Navbar bg="dark" variant="dark">
@@ -22,7 +24,7 @@ function NavBar(props) {
           <Navbar.Brand href="/">NelsonFlix</Navbar.Brand>
           <Nav className="justify-content-end">
             <Nav.Item>
-            <Form className="d-flex">
+            <Form className="d-flex" onSubmit={(ev) => handleSearch(document.getElementById('searchField').value, ev)}>
                     <Form.Control
                       type="search"
                       placeholder="Insira um filme..."
@@ -30,8 +32,8 @@ function NavBar(props) {
                       aria-label="Search"
                       id='searchField'
                     />
-                    <Button
-                    onClick={() => handleSearch(document.getElementById('searchField').value)}
+                    <Button 
+                    type="submit"
                      variant="outline-success">
                       <BsSearch></BsSearch>
                     </Button>
