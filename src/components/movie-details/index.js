@@ -6,7 +6,8 @@ import { Card, Spinner } from "react-bootstrap";
 import {Container, Badge }from "react-bootstrap";
 import { NumericFormat } from "react-number-format";
 import { AiFillStar } from "react-icons/ai";
-import unavailableImg from '../../assets/unavailable-image.jpg'
+import unavailableImg from '../../assets/unavailable-image.jpg' 
+import './style.css'
 
 
 function MovieDetails(props) {
@@ -43,10 +44,10 @@ function MovieDetails(props) {
         {loading ? 
         <Spinner animation="border" ></Spinner>
         :
-        <Container style={{display:'flex', margin:'20px'}}>
-        <div style={{display:'flex', gap:'10px'}}>
+        <Container fluid style={{marginTop:'20px'}} className='d-flex align-items-center justify-content-center'>
+        <div id='pn-movie-details' style={{display:'flex', gap:'10px'}}>
             <div>
-        <Card style={{ width:'18rem', padding:'5px' }} bg="dark"  text="white">
+        <Card style={{ width:'18rem', padding:'5px'}} bg="dark"  text="white" >
         <Card.Img variant="top" src={details.poster_path ?
         'https://image.tmdb.org/t/p/w500' + details.poster_path :
         unavailableImg} />
@@ -59,7 +60,7 @@ function MovieDetails(props) {
         </Card.Body>
       </Card>
       </div>
-      <div style={{display:'flex', flexDirection:'column', gap:'5px'}}>
+      <div id="movie-details" >
         <strong>Título</strong>{details.title || 'Indisponível'}
         <strong>Sinopse</strong>{details.overview || 'Indisponível'}
         <div>

@@ -6,13 +6,14 @@ import Col from 'react-bootstrap/Col';
 import { useContext } from "react";
 import Stack from 'react-bootstrap/Stack';
 import Spinner from 'react-bootstrap/Spinner';
-import { Button } from "react-bootstrap";
+import { Button, Collapse } from "react-bootstrap";
 import { MoviesContext } from "../../contexts/MoviesContext";
 import { Pagination } from "react-bootstrap";
 
 
 function Home() {
 
+    const itemPerPage = 10
     const { movies, nextPage, prevPage, goToPage, isLoading, page, totalPages } = useContext(MoviesContext)
 
     const handlePrevPage = () => prevPage()
@@ -57,7 +58,8 @@ items.push(
                         {
                             !isLoading ?(
                                 movies.map((movie) => (
-                                    <Col key={movie.id} xs={12} sm={12} md={6} xmd={3} lg={3} xl={3} xll={2} style={{ marginBottom: '15px' }}>
+                                    <Collapse in={!isLoading} mountOnEnter = {true} >
+                                    <Col key={movie.id} xs={12} sm={12} md={6} xmd={3} lg={3} xl={3} xll={2} style={{ marginBottom: '15px' }} className='d-flex align-items-center justify-content-center'>
                                         <MovieCard
                                             title={movie.title}
                                             description={movie.overview}
@@ -67,6 +69,7 @@ items.push(
                                         >
                                         </MovieCard>
                                     </Col>
+                                    </Collapse>
                                 ))
                             )
                                 :

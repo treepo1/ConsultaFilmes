@@ -1,5 +1,5 @@
 import axios from "axios";
-import { createContext, useEffect, useState } from "react";
+import { createContext, useLayoutEffect, useState } from "react";
 
 export const MoviesContext = createContext({})
 
@@ -10,8 +10,9 @@ export const MoviesProvider = ({ children }) => {
     const [isLoading, setIsLoading] = useState(true)
     const [query, setQuery] = useState('')
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         const getMovies = async() => {
+            setMovies([])
             const res = await axios.get(`https://api.themoviedb.org/3/movie/popular?api_key=d49de9500030e9647cb9119bd7cb3b2c&language=pt-BR&page=${page}`)
             console.log(res.data)
             setMovies(res.data.results)
@@ -41,6 +42,7 @@ export const MoviesProvider = ({ children }) => {
 
     async function searchFor(query) {
         setIsLoading(true)
+        setMovies([])
         const res = await axios.get(`https://api.themoviedb.org/3/search/movie?api_key=d49de9500030e9647cb9119bd7cb3b2c&query=${encodeURI(query)}`)
         console.log('query', query)
         setMovies(res.data.results)

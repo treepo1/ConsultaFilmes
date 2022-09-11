@@ -21,8 +21,8 @@ function NavBar(props) {
     if(props.mode === 'detail') navigate('/')
   }
     return (
-        <Navbar bg="dark" variant="dark">
-        <Container>
+        <Navbar bg="dark" variant="dark" style={{width:'100%'}}>
+        <Container fluid>
           <Navbar.Brand href='/'>Flix</Navbar.Brand>
           <Nav className="justify-content-end">
             <Nav.Item>
