@@ -21,7 +21,7 @@ function Home() {
 
     return (
         <>
-            <NavBar />  
+            <NavBar mode='all'/>  
             <div style={{ padding: '30px' }}>
                 <Container >
                     <h2 style={{ marginBottom: '25px' }}>Mais populares</h2>
@@ -44,7 +44,7 @@ function Home() {
                                         <MovieCard
                                             title={movie.title}
                                             description={movie.overview}
-                                            poster={'https://image.tmdb.org/t/p/w500' + movie.poster_path}
+                                            poster={movie.poster_path ? 'https://image.tmdb.org/t/p/w500' + movie.poster_path: null}
                                             grade={movie.vote_average}
                                             id={movie.id}
                                         >

@@ -2,12 +2,13 @@ import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import {AiFillStar} from 'react-icons/ai';
 import {useNavigate} from 'react-router-dom'
+import unavailableImg from '../../assets/unavailable-image.jpg'
 
 function MovieCard(props) {
     const navigate = useNavigate();
     return ( 
         <Card style={{ width: '18rem', padding:'5px' }} bg="dark" text="white">
-        <Card.Img variant="top" src={props.poster} />
+        <Card.Img variant="top" src={props.poster || unavailableImg} style={{height:`${!props.poster? '400px':''}`}} />
         <Card.Body>
           <Card.Title className='text-truncate' style={{maxWidth:"250px"}}>{props.title}</Card.Title>
           <Card.Text >

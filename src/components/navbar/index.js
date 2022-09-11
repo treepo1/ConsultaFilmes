@@ -12,16 +12,18 @@ import { useNavigate } from 'react-router-dom';
 
 
 function NavBar(props) {
-  
+
+  const navigate = useNavigate()
   const { searchFor } = useContext(MoviesContext)
   const handleSearch = async (query,ev) => { 
     ev.preventDefault()
-    searchFor(query)
+    await searchFor(query)
+    if(props.mode === 'detail') navigate('/')
   }
     return (
         <Navbar bg="dark" variant="dark">
         <Container>
-          <Navbar.Brand href="/">NelsonFlix</Navbar.Brand>
+          <Navbar.Brand href='/'>Flix</Navbar.Brand>
           <Nav className="justify-content-end">
             <Nav.Item>
             <Form className="d-flex" onSubmit={(ev) => handleSearch(document.getElementById('searchField').value, ev)}>

@@ -6,6 +6,7 @@ import { Card, Spinner } from "react-bootstrap";
 import {Container, Badge }from "react-bootstrap";
 import { NumericFormat } from "react-number-format";
 import { AiFillStar } from "react-icons/ai";
+import unavailableImg from '../../assets/unavailable-image.jpg'
 
 
 function MovieDetails(props) {
@@ -38,7 +39,7 @@ function MovieDetails(props) {
     const urlParams = useParams()
     return (
         <>
-        <NavBar/>
+        <NavBar mode='detail'/>
         {loading ? 
         <Spinner animation="border" ></Spinner>
         :
@@ -46,7 +47,9 @@ function MovieDetails(props) {
         <div style={{display:'flex', gap:'10px'}}>
             <div>
         <Card style={{ width:'18rem', padding:'5px' }} bg="dark"  text="white">
-        <Card.Img variant="top" src={'https://image.tmdb.org/t/p/w500' + details.poster_path} />
+        <Card.Img variant="top" src={details.poster_path ?
+        'https://image.tmdb.org/t/p/w500' + details.poster_path :
+        unavailableImg} />
         <Card.Body>
           <Card.Text >
             <div style={{display:'flex', alignItems:'center', gap:'5px'}}>
