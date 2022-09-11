@@ -1,6 +1,11 @@
 import axios from "axios";
 import { createContext, useLayoutEffect, useState } from "react";
 
+export const FilterOptions = {
+    0:"upcoming",
+    1:"popular"
+}
+
 export const MoviesContext = createContext({})
 
 export const MoviesProvider = ({ children }) => {
@@ -8,12 +13,13 @@ export const MoviesProvider = ({ children }) => {
     const [page, setPage] = useState(1)
     const [totalPages, setTotalPages] = useState(1)
     const [isLoading, setIsLoading] = useState(true)
+    const [filter, setFilter] = useState('upcoming')
     const [query, setQuery] = useState('')
 
     useLayoutEffect(() => {
         const getMovies = async() => {
             setMovies([])
-            const res = await axios.get(`https://api.themoviedb.org/3/movie/popular?api_key=d49de9500030e9647cb9119bd7cb3b2c&language=pt-BR&page=${page}`)
+            const res = await axios.get(`https://api.themoviedb.org/3/movie/${filter}?api_key=d49de9500030e9647cb9119bd7cb3b2c&language=pt-BR&page=${page}`)
             console.log(res.data)
             setMovies(res.data.results)
             setTotalPages(res.data.total_pages)
@@ -21,7 +27,7 @@ export const MoviesProvider = ({ children }) => {
         setIsLoading(true)
         getMovies()
         setIsLoading(false)
-    }, [page])
+    }, [page, filter])
 
     async function nextPage() {
         setPage(page + 1)
@@ -50,6 +56,10 @@ export const MoviesProvider = ({ children }) => {
         setQuery(query)
     }
 
+    async function filterFor(FilterOption) {
+        setFilter(FilterOptions[FilterOption])
+    }
+
     return (
         <MoviesContext.Provider
           value={{
@@ -60,7 +70,8 @@ export const MoviesProvider = ({ children }) => {
             nextPage,
             prevPage,
             goToPage,
-            searchFor
+            searchFor,
+            filterFor
           }}
         >
           {children}

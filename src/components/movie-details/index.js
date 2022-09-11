@@ -12,7 +12,7 @@ import './style.css'
 
 function MovieDetails(props) {
     const [details, setDetails] = useState({
-        genres: [],
+        genres: [{id:0, name:'Indisponível'}],
         original_language: 'Indisponível',
         original_title:'Indisponível',
         overview:'Indisponível',
@@ -75,9 +75,11 @@ function MovieDetails(props) {
         }
         </div>
         <strong>Duração</strong>{details.runtime} minutos
-        <strong>Lançamento</strong>{details.release_date.split('-')[2] + '/' + 
+        <strong>Lançamento</strong>{details.release_date !== 'Indisponível' ?
+        details.release_date.split('-')[2] + '/' + 
         details.release_date.split('-')[1] + '/'+
-        details.release_date.split('-')[0] }
+        details.release_date.split('-')[0] : 
+        'Indisponível' }
         <strong>Orçamento: </strong><Badge pill bg="info"><NumericFormat 
         value={details.budget} 
         prefix={'$'} 

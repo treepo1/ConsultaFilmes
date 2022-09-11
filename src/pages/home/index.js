@@ -9,16 +9,21 @@ import Spinner from 'react-bootstrap/Spinner';
 import { Button, Collapse } from "react-bootstrap";
 import { MoviesContext } from "../../contexts/MoviesContext";
 import { Pagination } from "react-bootstrap";
+import Tab from 'react-bootstrap/Tab';
+import { useState } from "react";
+import Tabs from 'react-bootstrap/Tabs';
+
 
 
 function Home() {
 
     const itemPerPage = 10
-    const { movies, nextPage, prevPage, goToPage, isLoading, page, totalPages } = useContext(MoviesContext)
+    const { movies, nextPage, prevPage, goToPage, isLoading, page, totalPages, filterFor, filter } = useContext(MoviesContext)
 
     const handlePrevPage = () => prevPage()
     const handleNextPage = () => nextPage()
     const handleClickPage = (page) => goToPage(page)
+    const [title, setTitle] = useState(filter)
 
 let active = page;
 let items = [];
@@ -51,9 +56,12 @@ items.push(
             <NavBar mode='all'/>  
             <div style={{ padding: '30px' }}>
                 <Container >
-                    <h2 style={{ marginBottom: '25px' }}>Mais populares</h2>
-
-                        
+                    <Tabs
+                    onSelect={(k) => {filterFor(k); setTitle(`${parseInt(k)===0? 'Em exibição': 'Mais populares'}`) }}
+                    defaultActiveKey={0}>
+                    <Tab eventKey={0} title="Em exibição"><h2 style={{ marginBottom: '25px',  marginTop:'10px' }}>Em exibição</h2></Tab>
+                    <Tab eventKey={1} title="Populares"><h2 style={{ marginBottom: '25px', marginTop:'10px' }}>Mais populares</h2></Tab>
+                    </Tabs>
                     <Row  >
                         {
                             !isLoading ?(
