@@ -18,12 +18,11 @@ import Tabs from 'react-bootstrap/Tabs';
 function Home() {
 
     const itemPerPage = 10
-    const { movies, nextPage, prevPage, goToPage, isLoading, page, totalPages, filterFor, filter } = useContext(MoviesContext)
+    const { movies, nextPage, prevPage, goToPage, isLoading, page, totalPages, filterFor, filter, mode, query } = useContext(MoviesContext)
 
     const handlePrevPage = () => prevPage()
     const handleNextPage = () => nextPage()
     const handleClickPage = (page) => goToPage(page)
-    const [title, setTitle] = useState(filter)
 
 let active = page;
 let items = [];
@@ -31,37 +30,49 @@ items.push(
 <Pagination.Prev onClick={handlePrevPage} />
 )
 
-for (let number = 1; number <= 20; number++) {
+for (let number = 1; number <= (totalPages < 20 ? totalPages: 20); number++) {
   items.push(
     <Pagination.Item key={number} active={number === active} onClick={()=>handleClickPage(number)}>
       {number}
     </Pagination.Item>,
   );
 }
-items.push(
-    <Pagination.Ellipsis></Pagination.Ellipsis>
-)
+
+if(totalPages > 20){
+    items.push(
+        <Pagination.Ellipsis></Pagination.Ellipsis>
+    )
+}
+
 items.push(
     <Pagination.Next onClick={handleNextPage}></Pagination.Next>
 )
+
+if(totalPages > 20){
 items.push(
-    <Pagination.Item onClick={()=>handleClickPage(totalPages-1)} >
+    <Pagination.Item onClick={()=>handleClickPage(totalPages)} active={totalPages === active} >
     {totalPages}
   </Pagination.Item>
   )
-    
+}   
 
     return (
         <>
             <NavBar mode='all'/>  
             <div style={{ padding: '30px' }}>
                 <Container >
-                    <Tabs
-                    onSelect={(k) => {filterFor(k); setTitle(`${parseInt(k)===0? 'Em exibição': 'Mais populares'}`) }}
-                    defaultActiveKey={0}>
-                    <Tab eventKey={0} title="Em exibição"><h2 style={{ marginBottom: '25px',  marginTop:'10px' }}>Em exibição</h2></Tab>
-                    <Tab eventKey={1} title="Populares"><h2 style={{ marginBottom: '25px', marginTop:'10px' }}>Mais populares</h2></Tab>
-                    </Tabs>
+                    {
+                        mode === 'all' ? 
+                        <Tabs
+                        onSelect={(k) => {filterFor(k) }}
+                        defaultActiveKey={0}>
+                        <Tab eventKey={0} title="Em exibição"><h2 style={{ marginBottom: '25px',  marginTop:'10px' }}>Em exibição</h2></Tab>
+                        <Tab eventKey={1} title="Populares"><h2 style={{ marginBottom: '25px', marginTop:'10px' }}>Mais populares</h2></Tab>
+                        </Tabs>
+                        :
+                        <h2 style={{ marginBottom: '25px', marginTop:'10px' }}  >Você pesquisou por: <strong>{query}</strong></h2>
+                    }
+
                     <Row  >
                         {
                             !isLoading ?(
