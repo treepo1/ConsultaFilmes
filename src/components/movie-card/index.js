@@ -7,8 +7,8 @@ import unavailableImg from '../../assets/unavailable-image.jpg'
 function MovieCard(props) {
     const navigate = useNavigate();
     return ( 
-        <Card style={{ width: '18rem', padding:'5px' }} bg="dark" text="white">
-        <Card.Img variant="top" src={props.poster || unavailableImg} style={{height:`${!props.poster? '400px':''}`}} />
+        <Card style={{ width: '14rem', padding:'5px', transition:'all ease 0.5s' }} bg="dark" text="white">
+        <Card.Img variant="top" src={props.poster || unavailableImg} style={{height:`${!props.poster? '320px':''}`}} />
         <Card.Body>
           <Card.Title className='text-truncate' style={{maxWidth:"250px"}}>{props.title}</Card.Title>
           <Card.Text >

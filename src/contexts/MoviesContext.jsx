@@ -6,6 +6,7 @@ export const MoviesContext = createContext({})
 export const MoviesProvider = ({ children }) => {
     const [movies, setMovies] = useState([])
     const [page, setPage] = useState(1)
+    const [totalPages, setTotalPages] = useState(1)
     const [isLoading, setIsLoading] = useState(true)
     const [query, setQuery] = useState('')
 
@@ -14,6 +15,7 @@ export const MoviesProvider = ({ children }) => {
             const res = await axios.get(`https://api.themoviedb.org/3/movie/popular?api_key=d49de9500030e9647cb9119bd7cb3b2c&language=pt-BR&page=${page}`)
             console.log(res.data)
             setMovies(res.data.results)
+            setTotalPages(res.data.total_pages)
         }
         setIsLoading(true)
         getMovies()
@@ -27,6 +29,14 @@ export const MoviesProvider = ({ children }) => {
     async function prevPage() {
         if(page - 1 < 1 ) return 
         setPage(page - 1)
+    }
+
+    async function goToPage(page) {
+        if(page > totalPages){
+            setPage(totalPages)
+            return
+        }
+        setPage(page)
     }
 
     async function searchFor(query) {
@@ -43,8 +53,11 @@ export const MoviesProvider = ({ children }) => {
           value={{
             movies,
             isLoading,
+            page,
+            totalPages,
             nextPage,
             prevPage,
+            goToPage,
             searchFor
           }}
         >
