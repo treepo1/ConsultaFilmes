@@ -5,9 +5,11 @@ import unavailableImg from '../../assets/unavailable-image.jpg'
 
 function MovieFeature(props) {
     return ( 
-        <Card className='d-flex justify-content-center align-items-center h-100' style={{ alignItems:"center", justifyContent:"center",  width: "400px", transition:'all ease 0.5s' }}>
+      <div className='d-flex justify-content-center align-items-center'>
+        <Card style={{ width: "400px", transition:'all ease 0.5s' }}>
         <Card.Img variant="bottom" src={props.poster || unavailableImg} style={{height:`${!props.poster? '10px':''}`}} />
       </Card>
+      </div>
     )
 }
 

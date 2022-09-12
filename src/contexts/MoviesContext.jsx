@@ -39,6 +39,7 @@ export const MoviesProvider = ({ children }) => {
             setTotalPages(res.data.total_pages)
         }
         const getMoviesTop = async() => {
+            setMoviestTop([])
             const res = await axios.get(`https://api.themoviedb.org/3/movie/top_rated?api_key=d49de9500030e9647cb9119bd7cb3b2c&language=pt-BR&page=${page}`)
             console.log(res.data)
             setMoviestTop(res.data.results)

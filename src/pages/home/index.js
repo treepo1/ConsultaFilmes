@@ -5,6 +5,9 @@ import Container from "react-bootstrap/esm/Container";
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import { useContext } from "react";
+import Carousel from 'react-bootstrap/Carousel';
+import Image from 'react-bootstrap/Image';
+import Ratio from 'react-bootstrap/Ratio';
 import Stack from 'react-bootstrap/Stack';
 import Spinner from 'react-bootstrap/Spinner';
 import { Button, Collapse } from "react-bootstrap";
@@ -13,10 +16,11 @@ import { Pagination } from "react-bootstrap";
 import Tab from 'react-bootstrap/Tab';
 import { useState } from "react";
 import Tabs from 'react-bootstrap/Tabs';
+import {useNavigate} from 'react-router-dom'
 
 
 
-let indexRandom = 0
+
 function Home() {
     const itemPerPage = 10
     const { movies, moviesTop, nextPage, prevPage, goToPage, isLoading, page, totalPages, filterFor, filter, mode, query } = useContext(MoviesContext)
@@ -24,16 +28,17 @@ function Home() {
     const handlePrevPage = () => prevPage()
     const handleNextPage = () => nextPage()
     const handleClickPage = (page) => goToPage(page)
+    const navigate = useNavigate();
     
     let active = page;
     let items = [];
-items.push(
-<Pagination.Prev onClick={handlePrevPage} />
-)
-
-for (let number = 1; number <= (totalPages < 20 ? totalPages: 20); number++) {
-  items.push(
-    <Pagination.Item key={number} active={number === active} onClick={()=>handleClickPage(number)}>
+    items.push(
+        <Pagination.Prev onClick={handlePrevPage} />
+        )
+        
+        for (let number = 1; number <= (totalPages < 20 ? totalPages: 20); number++) {
+            items.push(
+                <Pagination.Item key={number} active={number === active} onClick={()=>handleClickPage(number)}>
       {number}
     </Pagination.Item>,
   );
@@ -42,16 +47,16 @@ for (let number = 1; number <= (totalPages < 20 ? totalPages: 20); number++) {
 if(totalPages > 20){
     items.push(
         <Pagination.Ellipsis></Pagination.Ellipsis>
-    )
-}
-
-items.push(
-    <Pagination.Next onClick={handleNextPage}></Pagination.Next>
-)
-
-if(totalPages > 20){
-items.push(
-    <Pagination.Item onClick={()=>handleClickPage(totalPages)} active={totalPages === active} >
+        )
+    }
+    
+    items.push(
+        <Pagination.Next onClick={handleNextPage}></Pagination.Next>
+        )
+        
+        if(totalPages > 20){
+            items.push(
+                <Pagination.Item onClick={()=>handleClickPage(totalPages)} active={totalPages === active} >
     {totalPages}
   </Pagination.Item>
   )
@@ -63,28 +68,44 @@ return (
     <>
             <NavBar mode='all'/>  
             <div style={{ padding: '30px' }}>
-                <Container >
-                    
-                <h1 style={{ marginBottom: '25px' }}>Destaque</h1>
-                    <Row  >
+                
+                
+                
+            <Row >
                         {
-                            !isLoading ?(
-                                indexRandom = parseInt(Math.random() * 20),
-                                    <Col key={moviesTop[indexRandom]} xs={12} sm={12} md={12} xmd={12} lg={12} xl={12} xll={12} style={{ marginBottom: '15px' }}>
-                                        <MovieFeature
-                                            poster={moviesTop[indexRandom] ? 'https://image.tmdb.org/t/p/w500' + moviesTop[indexRandom].poster_path: null}
-                                        >
-                                        </MovieFeature>
-                                    </Col>
+                            !isLoading && mode !== "search" ?(
+                                <Col xs={12} sm={12} md={12} xmd={12} lg={12} xl={12} xll={12} style={{ marginBottom: '15px' }}>
+                                <h2 style={{marginBottom: "10px"}}>Top filmes</h2>
+                                <Carousel style={{width:"100%",backgroundColor:"#212529", borderRadius:"10px"}}>
+                                {
+                                moviesTop.map((movie) => (
+                                    <Carousel.Item style={{maxWidth:"100%", padding:"20px"}} interval= {5000}>
+                                        <div className= "d-flex justify-content-center align-items-center">
+                                        <Image fluid rounded thumbnail style = {{opacity: "0.9", marginBottom: "20px", cursor:"pointer", border:"100px solid-black"}}src={movie.poster_path ? 'https://image.tmdb.org/t/p/w500' + movie.poster_path: null} onClick={ () => navigate(`/movie/${movie.id}`)} >
+                                        </Image>
+                                        </div>
+                                    </Carousel.Item>
+
+                                ))}
+                                </Carousel>
+                                </Col>
                             )
-                                :
-                                (
+                            : 
+                            mode != "search" ?
+                            (
                                 <Spinner animation="border" role="status">
                                 <span className="visually-hidden">Loading...</span>
                               </Spinner>
                                 )
+                            :
+                            <>
+                            </>
                         }
                     </Row>
+                
+                
+                
+                <Container >
                     
                     
                     {
