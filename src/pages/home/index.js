@@ -59,29 +59,18 @@ items.push(
 
 
 
-  indexRandom = parseInt(Math.random() * 20)
-    return (
-        <>
+return (
+    <>
             <NavBar mode='all'/>  
             <div style={{ padding: '30px' }}>
                 <Container >
-                    {
-                        mode === 'all' ? 
-                        <Tabs
-                        onSelect={(k) => {filterFor(k) }}
-                        defaultActiveKey={0}>
-                        <Tab eventKey={0} title="Em exibição"><h2 style={{ marginBottom: '25px',  marginTop:'10px' }}>Em exibição</h2></Tab>
-                        <Tab eventKey={1} title="Populares"><h2 style={{ marginBottom: '25px', marginTop:'10px' }}>Mais populares</h2></Tab>
-                        </Tabs>
-                        :
-                        <h2 style={{ marginBottom: '25px', marginTop:'10px' }}  >Você pesquisou por: <strong>{query}</strong></h2>
-                    }
                     
-                    <h1 style={{ marginBottom: '25px' }}>Destaque</h1>
+                <h1 style={{ marginBottom: '25px' }}>Destaque</h1>
                     <Row  >
                         {
                             !isLoading ?(
-                                    <Col key={moviesTop[indexRandom]} xs={12} sm={12} md={6} xmd={3} lg={3} xl={3} xll={2} style={{ marginBottom: '15px' }}>
+                                indexRandom = parseInt(Math.random() * 20),
+                                    <Col key={moviesTop[indexRandom]} xs={12} sm={12} md={12} xmd={12} lg={12} xl={12} xll={12} style={{ marginBottom: '15px' }}>
                                         <MovieFeature
                                             poster={moviesTop[indexRandom] ? 'https://image.tmdb.org/t/p/w500' + moviesTop[indexRandom].poster_path: null}
                                         >
@@ -96,9 +85,20 @@ items.push(
                                 )
                         }
                     </Row>
+                    
+                    
+                    {
+                        mode === 'all' ? 
+                        <Tabs
+                        onSelect={(k) => {filterFor(k) }}
+                        defaultActiveKey={0}>
+                        <Tab eventKey={0} title="Em exibição"><h2 style={{ marginBottom: '25px',  marginTop:'10px' }}>Em exibição</h2></Tab>
+                        <Tab eventKey={1} title="Populares"><h2 style={{ marginBottom: '25px', marginTop:'10px' }}>Mais populares</h2></Tab>
+                        </Tabs>
+                        :
+                        <h2 style={{ marginBottom: '25px', marginTop:'10px' }}  >Você pesquisou por: <strong>{query}</strong></h2>
+                    }
 
-
-                    <h2 style={{ marginBottom: '25px' }}>Mais populares</h2>
                     <Row  >
                         {
                             !isLoading ?(
