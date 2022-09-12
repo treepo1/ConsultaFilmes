@@ -15,6 +15,7 @@ export const MoviesContext = createContext({})
 
 export const MoviesProvider = ({ children }) => {
     const [movies, setMovies] = useState([])
+    const [moviesTop, setMoviestTop] = useState([])
     const [page, setPage] = useState(1)
     const [totalPages, setTotalPages] = useState(1)
     const [isLoading, setIsLoading] = useState(true)
@@ -37,8 +38,15 @@ export const MoviesProvider = ({ children }) => {
             setMovies(res.data.results)
             setTotalPages(res.data.total_pages)
         }
+        const getMoviesTop = async() => {
+            setMoviestTop([])
+            const res = await axios.get(`https://api.themoviedb.org/3/movie/top_rated?api_key=d49de9500030e9647cb9119bd7cb3b2c&language=pt-BR&page=${page}`)
+            console.log(res.data)
+            setMoviestTop(res.data.results)
+        }
         setIsLoading(true)
         getMovies()
+        getMoviesTop()
         setIsLoading(false)
     }, [page, filter, mode, query])
 
@@ -82,6 +90,7 @@ export const MoviesProvider = ({ children }) => {
         <MoviesContext.Provider
           value={{
             movies,
+            moviesTop,
             isLoading,
             page,
             query,
