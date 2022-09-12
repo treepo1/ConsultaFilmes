@@ -21,9 +21,11 @@ function NavBar(props) {
     if(props.mode === 'detail') navigate('/')
   }
     return (
-        <Navbar bg="dark" variant="dark">
-        <Container>
-          <Navbar.Brand href='/'>Flix</Navbar.Brand>
+        <Navbar bg="dark" variant="dark" style={{width:'100%'}}>
+        <Container fluid>
+          <Navbar.Brand href='/'>
+            <img src = 'https://assets.nflxext.com/ffe/siteui/common/icons/nficon2016.ico' alt='logo'>
+            </img>Flix</Navbar.Brand>
           <Nav className="justify-content-end">
             <Nav.Item>
             <Form className="d-flex" onSubmit={(ev) => handleSearch(document.getElementById('searchField').value, ev)}>
