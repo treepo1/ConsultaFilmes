@@ -8,6 +8,7 @@ import { NumericFormat } from "react-number-format";
 import { AiFillStar } from "react-icons/ai";
 import unavailableImg from '../../assets/unavailable-image.jpg' 
 import './style.css'
+import Youtube from "react-youtube"
 
 
 function MovieDetails(props) {
@@ -24,7 +25,8 @@ function MovieDetails(props) {
         vote_average:0,
         release_date:'Indisponível',
         title:'Indisponível',
-        tagline:'Indisponível'
+        tagline:'Indisponível',
+        videos:{results:[{key:''}]}
     })
     const [loading, setLoading] = useState(true)
     useEffect(() => {
@@ -92,8 +94,18 @@ function MovieDetails(props) {
         displayType="text"
         decimalSeparator=","
         thousandSeparator="."/></Badge>
+        {
+            details.videos.results.length !== 0 ?
+            <Youtube
+            style={{marginTop:'20px'}}
+            opts={{width:'100%'}}
+            videoId = {details.videos.results[0].key} >
+            </Youtube>: <></>
+        }
+
         </div>
         </div>
+
         </Container>
         }
         
