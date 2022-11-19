@@ -1,5 +1,6 @@
 import axios from "axios";
 import { createContext, useLayoutEffect, useState } from "react";
+import apiClient from "../api";
 
 export const FilterOptions = {
     0:"upcoming",
@@ -26,17 +27,9 @@ export const MoviesProvider = ({ children }) => {
     useLayoutEffect(() => {
         const getMovies = async() => {
             setMovies([])
-            if (mode === 'search') {
-                const res = await axios.get(`https://api.themoviedb.org/3/search/movie?api_key=d49de9500030e9647cb9119bd7cb3b2c&query=${encodeURI(query)}&language=pt-BR&page=${page}`)
-                console.log(res.data)
-                setMovies(res.data.results)
-                setTotalPages(res.data.total_pages)
-                return
-            }
-            const res = await axios.get(`https://api.themoviedb.org/3/movie/${filter}?api_key=d49de9500030e9647cb9119bd7cb3b2c&language=pt-BR&page=${page}`)
-            console.log(res.data)
-            setMovies(res.data.results)
-            setTotalPages(res.data.total_pages)
+            const res = await apiClient.get('/filme');
+            setMovies(res.data)
+            setTotalPages(0)
         }
         const getMoviesTop = async() => {
             setMoviestTop([])
@@ -68,22 +61,25 @@ export const MoviesProvider = ({ children }) => {
     }
 
     async function searchFor(query) {
-        if(query.trim() === '') return
-        setIsLoading(true)
-        setMovies([])
-        const res = await axios.get(`https://api.themoviedb.org/3/search/movie?api_key=d49de9500030e9647cb9119bd7cb3b2c&query=${encodeURI(query)}&language=pt-BR&page=${page}`)
-        console.log('query', query)
-        console.log(res.data)
-        setMovies(res.data.results)
-        setIsLoading(false)
-        setQuery(query)
-        setMode('search')
+        return
+        // if(query.trim() === '') return
+        // setIsLoading(true)
+        // setMovies([])
+        // const res = await axios.get(`https://api.themoviedb.org/3/search/movie?api_key=d49de9500030e9647cb9119bd7cb3b2c&query=${encodeURI(query)}&language=pt-BR&page=${page}`)
+        // console.log('query', query)
+        // console.log(res.data)
+        // setMovies(res.data.results)
+        // setIsLoading(false)
+        // setQuery(query)
+        // setMode('search')
+        // setPage(1)
         
     }
 
     async function filterFor(FilterOption) {
-        setFilter(FilterOptions[FilterOption])
-        setMode('all')
+        return
+        // setFilter(FilterOptions[FilterOption])
+        // setMode('all')
     }
 
     return (

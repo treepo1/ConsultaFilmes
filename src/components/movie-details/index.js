@@ -9,6 +9,7 @@ import { AiFillStar } from "react-icons/ai";
 import unavailableImg from '../../assets/unavailable-image.jpg' 
 import './style.css'
 import Youtube from "react-youtube"
+import apiClient from "../../api";
 
 
 function MovieDetails(props) {
@@ -26,14 +27,26 @@ function MovieDetails(props) {
         release_date:'Indisponível',
         title:'Indisponível',
         tagline:'Indisponível',
-        videos:{results:[{key:''}]}
+        video:'',
     })
     const [loading, setLoading] = useState(true)
     useEffect(() => {
         const getDetails = async () => {
-            const details = await axios.get(`https://api.themoviedb.org/3/movie/${urlParams.id}?api_key=d49de9500030e9647cb9119bd7cb3b2c&language=pt-BR&append_to_response=videos`)
-            console.log(details)
-            setDetails(details.data)
+            const res = await apiClient.get(`/filme/${urlParams.id}`)
+            console.log(res)
+            setDetails({
+                ...details,
+                title: res.data.titulo,
+                overview: res.data.filme.sinopse,
+                budget: res.data.orcamento,
+                revenue: res.data.filme.bilheteria,
+                runtime: res.data.filme.duracao,
+                poster_path: res.data.imagem ?
+                res.data.imagem.find(img => img.fl_poster).url: null,
+                release_date: new Date(res.data.data_lancamento).toLocaleDateString(),
+                genres: res.data.conteudo_genero.map((genre) => ({id: genre.genero.id, name: genre.genero.nome})),
+                video: res.data.video.length > 0?  res.data.video.find(video => video.fl_trailer).url: '',
+            })
         }
         setLoading(true)
         getDetails()
@@ -50,13 +63,13 @@ function MovieDetails(props) {
         <div id='pn-movie-details' style={{display:'flex', gap:'10px'}}>
             <div>
         <Card style={{ width:'18rem', padding:'5px'}} bg="dark"  text="white" >
-        <Card.Img variant="top" src={details.poster_path ?
-        'https://image.tmdb.org/t/p/w500' + details.poster_path :
-        unavailableImg} />
+        <Card.Img variant="top" src={
+        details.poster_path ?
+        details.poster_path : unavailableImg} />
         <Card.Body>
           <Card.Text >
             <div style={{display:'flex', alignItems:'center', gap:'5px'}}>
-          <AiFillStar/> {details.vote_average}
+          <AiFillStar/> {0}
           </div>
           </Card.Text>
         </Card.Body>
@@ -78,10 +91,7 @@ function MovieDetails(props) {
         </div>
         <strong>Duração</strong>{details.runtime} minutos
         <strong>Lançamento</strong>{details.release_date !== 'Indisponível' ?
-        details.release_date.split('-')[2] + '/' + 
-        details.release_date.split('-')[1] + '/'+
-        details.release_date.split('-')[0] : 
-        'Indisponível' }
+        details.release_date : 'Indisponível'}
         <strong>Orçamento: </strong><Badge pill bg="info"><NumericFormat 
         value={details.budget} 
         prefix={'$'} 
@@ -95,11 +105,11 @@ function MovieDetails(props) {
         decimalSeparator=","
         thousandSeparator="."/></Badge>
         {
-            details.videos.results.length !== 0 ?
+            details.video!== "" ?
             <Youtube
             style={{marginTop:'20px'}}
             opts={{width:'100%'}}
-            videoId = {details.videos.results[0].key} >
+            videoId = {details.video.split('https://www.youtube.com/watch?v=')[1]} >
             </Youtube>: <></>
         }
 

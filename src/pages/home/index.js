@@ -1,5 +1,4 @@
 import MovieCard from "../../components/movie-card";
-import MovieFeature from "../../components/movie-feature";
 import NavBar from "../../components/navbar";
 import Container from "react-bootstrap/esm/Container";
 import Row from 'react-bootstrap/Row';
@@ -7,16 +6,14 @@ import Col from 'react-bootstrap/Col';
 import { useContext } from "react";
 import Carousel from 'react-bootstrap/Carousel';
 import Image from 'react-bootstrap/Image';
-import Ratio from 'react-bootstrap/Ratio';
-import Stack from 'react-bootstrap/Stack';
 import Spinner from 'react-bootstrap/Spinner';
-import { Button, Collapse } from "react-bootstrap";
+import { Collapse } from "react-bootstrap";
 import { MoviesContext } from "../../contexts/MoviesContext";
 import { Pagination } from "react-bootstrap";
 import Tab from 'react-bootstrap/Tab';
-import { useState } from "react";
 import Tabs from 'react-bootstrap/Tabs';
 import {useNavigate} from 'react-router-dom'
+import { Button } from "react-bootstrap";
 
 
 
@@ -25,6 +22,8 @@ function Home() {
     const itemPerPage = 10
     const { movies, moviesTop, nextPage, prevPage, goToPage, isLoading, page, totalPages, filterFor, filter, mode, query } = useContext(MoviesContext)
 
+
+    console.log(movies)
     const handlePrevPage = () => prevPage()
     const handleNextPage = () => nextPage()
     const handleClickPage = (page) => goToPage(page)
@@ -68,46 +67,16 @@ return (
     <>
             <NavBar mode='all'/>  
             <div style={{ padding: '30px' }}>
-                
-                
-                
-            <Row >
-                        {
-                            !isLoading && mode !== "search" ?(
-                                <Col xs={12} sm={12} md={12} xmd={12} lg={12} xl={12} xll={12} style={{ marginBottom: '15px' }}>
-                                <h2 style={{marginBottom: "10px"}}>Top filmes</h2>
-                                <Carousel style={{width:"100%",backgroundColor:"#212529", borderRadius:"10px"}}>
-                                {
-                                moviesTop.map((movie) => (
-                                    <Carousel.Item style={{maxWidth:"100%", padding:"20px"}} interval= {5000}>
-                                        <div className= "d-flex justify-content-center align-items-center">
-                                        <Image fluid rounded thumbnail style = {{opacity: "0.9", marginBottom: "20px", cursor:"pointer", border:"100px solid-black"}}src={movie.poster_path ? 'https://image.tmdb.org/t/p/w500' + movie.poster_path: null} onClick={ () => navigate(`/movie/${movie.id}`)} >
-                                        </Image>
-                                        </div>
-                                    </Carousel.Item>
-
-                                ))}
-                                </Carousel>
-                                </Col>
-                            )
-                            : 
-                            mode != "search" ?
-                            (
-                                <Spinner animation="border" role="status">
-                                <span className="visually-hidden">Loading...</span>
-                              </Spinner>
-                                )
-                            :
-                            <>
-                            </>
-                        }
-                    </Row>
-                
-                
+            
+            <div style={{display:'flex', gap:'10px', marginBottom:'12px'}}>
+            <Button onClick={() => navigate('/form/movie')}>Novo Filme</Button>
+            <Button onClick={() => navigate('/form/genre')}>Novo Genero</Button>
+            </div>
+           
                 
                 <Container >
                     
-                    
+                
                     {
                         mode === 'all' ? 
                         <Tabs
@@ -126,12 +95,16 @@ return (
                                 movies.map((movie) => (
                                     <Collapse in={!isLoading} mountOnEnter = {true} >
                                     <Col key={movie.id} xs={12} sm={12} md={6} xmd={3} lg={3} xl={3} xll={2} style={{ marginBottom: '15px' }} className='d-flex align-items-center justify-content-center'>
+                                        
                                         <MovieCard
-                                            title={movie.title}
-                                            description={movie.overview}
-                                            poster={movie.poster_path ? 'https://image.tmdb.org/t/p/w500' + movie.poster_path: null}
-                                            grade={movie.vote_average}
-                                            id={movie.id}
+                                            title={movie.titulo}
+                                            description={movie.descricao}
+                                            poster={ movie.imagem.length > 0 ? 
+                                            movie.imagem.find(img => img.fl_poster) 
+                                            ? movie.imagem.find(img => img.fl_poster).url : null
+                                             : null}
+                                            grade={0}
+                                            id={movie.id}   
                                         >
                                         </MovieCard>
                                     </Col>

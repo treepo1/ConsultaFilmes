@@ -8,6 +8,9 @@ import axios from 'axios';
 import { useContext } from 'react';
 import { MoviesContext } from '../../contexts/MoviesContext';
 import { useNavigate } from 'react-router-dom';
+import ButtonGroup from 'react-bootstrap/ButtonGroup';
+import Dropdown from 'react-bootstrap/Dropdown';
+import DropdownButton from 'react-bootstrap/DropdownButton';
 
 
 
@@ -27,6 +30,18 @@ function NavBar(props) {
             <img src = 'https://assets.nflxext.com/ffe/siteui/common/icons/nficon2016.ico' alt='logo'>
             </img>Flix</Navbar.Brand>
           <Nav className="justify-content-end">
+            <Nav.Item>
+              <ButtonGroup vertical>
+              <DropdownButton
+              align='end'
+        as={ButtonGroup}
+        title={<img width="30" src='https://www.cvkeep.com/img/flags/pt-br.webp'></img>}
+        id="bg-vertical-dropdown-1"
+      >
+        <Dropdown.Item eventKey="1"><img width="30" src='https://www.cvkeep.com/img/flags/en.webp'></img> Inglês</Dropdown.Item>
+      </DropdownButton>
+              </ButtonGroup>
+            </Nav.Item>
             <Nav.Item>
             <Form className="d-flex" onSubmit={(ev) => handleSearch(document.getElementById('searchField').value, ev)}>
                     <Form.Control
