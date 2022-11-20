@@ -101,6 +101,7 @@ export default function GenreForm() {
                     'success'
                     )
                     setLoading(false);
+                    setGeneros(generos.filter(genero => genero.id !== id));
                 })
             }
         })
