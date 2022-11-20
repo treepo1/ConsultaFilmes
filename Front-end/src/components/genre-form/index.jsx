@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button, InputGroup, Modal } from "react-bootstrap";
+import { Button, InputGroup} from "react-bootstrap";
 import apiClient from "../../api";
 import NavBar from "../navbar";
 import Swal from "sweetalert2";
@@ -39,7 +39,6 @@ export default function GenreForm() {
                                 })
                               })}}  style={{marginTop:'16x'}} className='right'>{loading ? 'Aguarde...' : 'Salvar'}</Button>
                     </InputGroup>
-                   
                 </div>
             </div>
         </div>
