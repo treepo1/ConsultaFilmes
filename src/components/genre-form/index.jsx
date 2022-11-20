@@ -21,7 +21,7 @@ export default function GenreForm() {
                 setGeneros(response.data);
                 setLoading(false);
             })
-    }, [loading])
+    }, [])
 
 
     const handleSubmit = (event) => {
