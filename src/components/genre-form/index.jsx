@@ -136,7 +136,7 @@ export default function GenreForm() {
                                             <tr>
                                                 <td>{genero.nome}</td>
                                                 <td><Button onClick={() => handleEdit(genero.id)}>Editar</Button></td>
-                                                <td><Button onClick={() => handleDelete(genero.id)}>Excluir</Button></td>
+                                                <td><Button  variant="danger"  onClick={() => handleDelete(genero.id)}>Excluir</Button></td>
                                             </tr>
                                         )
                                     })}
