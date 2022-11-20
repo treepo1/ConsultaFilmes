@@ -45,6 +45,7 @@ export default function GenreForm() {
                 setIsEdit(false);
                 setIdGenero(0);
                 setNomeGenero('');
+                setGeneros([...generos, generos.find(genero => genero.id === idGenero).nome = nomeGenero]);
                 Swal.fire({
                     title: 'Sucesso!',
                     text: 'Gênero editado com sucesso!',
@@ -64,6 +65,7 @@ export default function GenreForm() {
                 })
                 setNomeGenero('');
                 setLoading(false);
+                setGeneros([...generos, { id: response.data.id, nome: nomeGenero }]);
             })
         }
         setSave(save + 1)
