@@ -42,7 +42,8 @@ function MovieDetails(props) {
                 revenue: res.data.filme.bilheteria,
                 runtime: res.data.filme.duracao,
                 poster_path: res.data.imagem ?
-                res.data.imagem.find(img => img.fl_poster).url: null,
+                res.data.imagem.find(img => img.fl_poster) ?
+                res.data.imagem.find(img => img.fl_poster).url: null : null,
                 release_date: new Date(res.data.data_lancamento).toLocaleDateString(),
                 genres: res.data.conteudo_genero.map((genre) => ({id: genre.genero.id, name: genre.genero.nome})),
                 video: res.data.video.length > 0?  res.data.video.find(video => video.fl_trailer).url: '',

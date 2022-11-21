@@ -14,13 +14,15 @@ import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 import {useNavigate} from 'react-router-dom'
 import { Button } from "react-bootstrap";
+import Swal from "sweetalert2";
+import apiClient from "../../api";
 
 
 
 
 function Home() {
     const itemPerPage = 10
-    const { movies, moviesTop, nextPage, prevPage, goToPage, isLoading, page, totalPages, filterFor, filter, mode, query } = useContext(MoviesContext)
+    const { movies, moviesTop, nextPage, prevPage, goToPage, isLoading, page, totalPages, filterFor, filter, mode, query} = useContext(MoviesContext)
 
 
     console.log(movies)
@@ -62,6 +64,30 @@ if(totalPages > 20){
 }
 
 
+const handleDeleteMovie = async (id) => {
+   
+    Swal.fire({
+      title:'Tem certeza?',
+      text: 'Você não poderá reverter isso!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sim, apague'
+    }).then( async (result) => {
+      if (result.isConfirmed) {
+        await apiClient.delete(`/filme/${id}`);
+        Swal.fire(
+          'Apagado!',
+          'O filme foi apagado com sucesso.',
+          'success'
+        )
+        goToPage(1)
+
+      }
+    })
+  };
+
 
 return (
     <>
@@ -97,6 +123,7 @@ return (
                                     <Col key={movie.id} xs={12} sm={12} md={6} xmd={3} lg={3} xl={3} xll={2} style={{ marginBottom: '15px' }} className='d-flex align-items-center justify-content-center'>
                                         
                                         <MovieCard
+                                            handleDeleteMovie = {handleDeleteMovie}
                                             title={movie.titulo}
                                             description={movie.descricao}
                                             poster={ movie.imagem.length > 0 ? 

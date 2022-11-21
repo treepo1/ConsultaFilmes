@@ -7,7 +7,10 @@ import unavailableImg from '../../assets/unavailable-image.jpg'
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
 import { BiEditAlt, BiX } from "react-icons/bi";
+import { BsFillTrashFill} from "react-icons/bs";
 import './style.css';
+import apiClient from '../../api';
+import Swal from 'sweetalert2';
 
 function MovieCard(props) {
   const navigate = useNavigate();
@@ -18,6 +21,8 @@ function MovieCard(props) {
     setImageLoading(false);
     setTimeout(() => setPulsing(false), 800);
   };
+
+
 
   return (
     <AnimatePresence exitBeforeEnter >
@@ -41,7 +46,7 @@ function MovieCard(props) {
         }}>
         <Card style={{ width: '14rem', padding: '5px', transition: 'all ease 0.5s' }} bg="dark" text="white" >
           <div className='col-5'>
-          <Button className='d-flex justify-content-end' onClick={() => navigate(`/movie/${props.id}`)} variant="primary" ><BiX /></Button>
+          <Button style={{marginBottom:'16px'}} className='d-flex justify-content-end' onClick={() =>props.handleDeleteMovie(props.id)} variant="danger" >< BsFillTrashFill /></Button>
           </div>
           <div
             style={{ background: "#ccc", width: "13rem" }}
@@ -67,11 +72,10 @@ function MovieCard(props) {
               <Card.Title className='text-truncate' style={{ maxWidth: "250px" }}>{props.title}</Card.Title>
             </OverlayTrigger>
             <Card.Text >
-              <AiFillStar /> {props.grade}
             </Card.Text>
-            <div className='col-12 row'>
+            <div className='row' style={{marginRight:'28px'}}>
               <div className='col-10'>
-                <Button onClick={() => navigate(`/movie/${props.id}`)} variant="primary">Ver detalhes</Button>
+                <Button  onClick={() => navigate(`/movie/${props.id}`)} variant="primary">Ver detalhes</Button>
               </div>
               <div className='col-2'>
                 <Button className='display-flex justify-content-end' onClick={() => navigate(`/form/movie/${props.id}`)} variant="primary" ><BiEditAlt /></Button>

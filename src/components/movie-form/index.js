@@ -4,13 +4,14 @@ import { useParams } from "react-router-dom";
 import apiClient from "../../api";
 import NavBar from "../navbar";
 import Swal from "sweetalert2";
+import dayjs from "dayjs";
 import Select from 'react-select';
 
 export default function MovieForm() {
 
     const [nomeFilme, setNomeFilme] = useState('');
     const [descricao, setDescricao] = useState('');
-    const [dataLanc, setDataLanc] = useState('');
+    const [dataLanc, setDataLanc] = useState(dayjs().format('YYYY-MM-DD')); 
     const [orcamento, setOrcamento] = useState('');
     const [lingOriginal, setLingOriginal] = useState('');
     const [status, setStatus] = useState('');
@@ -39,7 +40,7 @@ export default function MovieForm() {
             const res = await apiClient.get(`/filme/${urlParams.id}`)
             setNomeFilme(res.data.titulo)
             setDescricao(res.data.descricao)
-            setDataLanc(new Date(res.data.data_lancamento).toLocaleDateString())
+            setDataLanc(dayjs(res.data.data_lancamento).format('YYYY-MM-DD'))
             setOrcamento(res.data.orcamento)
             setLingOriginal(res.data.linguagem_original)
             setStatus(res.data.status)
@@ -115,7 +116,7 @@ export default function MovieForm() {
                         <div className="col-6">
                             <InputGroup style={{ marginTop: '24px' }}>
                                 <InputGroup.Text id="inputGroup-sizing-default">Data de lançamento</InputGroup.Text>
-                                <input value={dataLanc} onChange={(ev) => {
+                                <input value={dayjs(dataLanc).format('YYYY-MM-DD')} onChange={(ev) => {
                                     setDataLanc(ev.target.value)
                                 }} type="date" className="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" />
                             </InputGroup>
@@ -159,8 +160,8 @@ export default function MovieForm() {
                                     setStatus(ev.target.value)
                                 }}>
                                     <option>Selecione</option>
-                                    <option value="em producao" selected={status}>Em produção</option>
-                                    <option value="lancado" selected={status}>Lançado</option>
+                                    <option value="em producao" selected={status === "em producao"}>Em produção</option>
+                                    <option value="lancado" selected={status === "lancado"}>Lançado</option>
                                 </Form.Select>
                             </InputGroup>
                         </div>
@@ -186,6 +187,12 @@ export default function MovieForm() {
                         </div>
 
                         <Button disabled={loading} onClick={async (ev) => {
+
+                            if(!nomeFilme || !descricao || !sinopse || generosFilme.lenght === 0 || !dataLanc || !orcamento || !bilheteria || !lingOriginal || !status || !duracao || !imagem){
+                                Swal.fire('Preencha todos os campos')
+                                return
+                            }
+
                             if (urlParams.id) {
                                 ev.preventDefault();
                                 apiClient.put(`/filme/${urlParams.id}`, {
@@ -231,7 +238,7 @@ export default function MovieForm() {
                                 console.log("Resposta", imagem);
                                 apiClient.post('/filme', {
                                     titulo: nomeFilme,
-                                    imagens: imagem[{ url: imagem, fl_poster: true }],
+                                    imagens: [{ url: imagem, fl_poster: true }],
                                     descricao: descricao,
                                     data_lancamento: new Date(dataLanc).toISOString(),
                                     orcamento: parseFloat(orcamento),

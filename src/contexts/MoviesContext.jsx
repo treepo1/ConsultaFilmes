@@ -61,8 +61,7 @@ export const MoviesProvider = ({ children }) => {
     }
 
     async function searchFor(query) {
-        return
-        // if(query.trim() === '') return
+        return;
         // setIsLoading(true)
         // setMovies([])
         // const res = await axios.get(`https://api.themoviedb.org/3/search/movie?api_key=d49de9500030e9647cb9119bd7cb3b2c&query=${encodeURI(query)}&language=pt-BR&page=${page}`)
