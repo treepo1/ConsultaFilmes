@@ -29,7 +29,10 @@ export default function MovieForm() {
                 setGeneros(response.data);
                 setLoading(false);
             })
-    }, [loading])
+    }, [])
+
+
+    const urlParams = useParams()
 
     useEffect(() => {
         const getMovie = async () => {
@@ -51,13 +54,15 @@ export default function MovieForm() {
         getMovie()
         setLoading(false)
         }
-    }, [])
+    }, [urlParams.id])
+
+    console.log(generosFilme)
 
     const opcoes = generos.map((genero) => {
         return { value: genero.id, label: genero.nome }
     })
 
-    const urlParams = useParams()
+
 
     return (
         <>
@@ -94,7 +99,11 @@ export default function MovieForm() {
                             <InputGroup style={{ marginTop: '24px' }}>
                                 <InputGroup.Text id="inputGroup-sizing-default">Generos</InputGroup.Text>
                                 <Select
-                                    defaultValue={opcoes.filter(option => generosFilme.some(g=> g.value = option.value))}
+                                 value={generosFilme}
+                                 onChange={(newValue) => {
+                                   setGenerosFilme(newValue)
+                                    
+                                }}
                                     options={opcoes}
                                     className="basic-multi-select"
                                     closeMenuOnSelect={false}
@@ -150,8 +159,8 @@ export default function MovieForm() {
                                     setStatus(ev.target.value)
                                 }}>
                                     <option>Selecione</option>
-                                    <option value="em producao" defaultValue={status}>Em produção</option>
-                                    <option value="lancado" defaultValue={status}>Lançado</option>
+                                    <option value="em producao" selected={status}>Em produção</option>
+                                    <option value="lancado" selected={status}>Lançado</option>
                                 </Form.Select>
                             </InputGroup>
                         </div>
@@ -177,19 +186,22 @@ export default function MovieForm() {
                         </div>
 
                         <Button disabled={loading} onClick={async (ev) => {
-                            if (urlParams) {
+                            if (urlParams.id) {
                                 ev.preventDefault();
                                 apiClient.put(`/filme/${urlParams.id}`, {
                                     titulo: nomeFilme,
-                                    imagens: imagem[{ url: imagem, fl_poster: true }],
+                                    imagens: [{ url: imagem, fl_poster: true }],
                                     descricao: descricao,
                                     data_lancamento: new Date(dataLanc).toISOString(),
                                     orcamento: parseFloat(orcamento),
                                     linguagem_original: lingOriginal,
                                     status: status,
-                                    generos: generosFilme,
+                                    generos: generosFilme.map((genero) => {
+                                        return { id: genero.value }
+                                        }),
                                     duracao: parseFloat(duracao),
                                     sinopse: sinopse,
+                                    videos:[],
                                     bilheteria: parseFloat(bilheteria),
                                 }).then((res) => {
                                     console.log("Resposta", res);
@@ -224,8 +236,10 @@ export default function MovieForm() {
                                     data_lancamento: new Date(dataLanc).toISOString(),
                                     orcamento: parseFloat(orcamento),
                                     linguagem_original: lingOriginal,
-                                    status: status,
-                                    generos: generosFilme,
+                                    status,
+                                    generos: generosFilme.map((genero) => {
+                                        return { id: genero.value }
+                                        }),
                                     duracao: parseFloat(duracao),
                                     sinopse: sinopse,
                                     bilheteria: parseFloat(bilheteria),
