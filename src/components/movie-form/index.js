@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import { Button, InputGroup, Form } from "react-bootstrap";
+import { useParams } from "react-router-dom";
 import apiClient from "../../api";
 import NavBar from "../navbar";
 import Swal from "sweetalert2";
-import { MDBSelect } from 'mdb-react-ui-kit';
+import Select from 'react-select';
 
 export default function MovieForm() {
 
@@ -17,7 +18,7 @@ export default function MovieForm() {
     const [sinopse, setSinopse] = useState('');
     const [duracao, setDuracao] = useState('');
     const [generos, setGeneros] = useState([]);
-    const [IdGenero, setIdGenero] = useState('');
+    const [generosFilme, setGenerosFilme] = useState([]);
     const [imagem, setImagem] = useState([]);
     const [loading, setLoading] = useState(false);
 
@@ -30,8 +31,33 @@ export default function MovieForm() {
             })
     }, [loading])
 
-    console.log("Generos", generos[1])
+    useEffect(() => {
+        const getMovie = async () => {
+            const res = await apiClient.get(`/filme/${urlParams.id}`)
+            setNomeFilme(res.data.titulo)
+            setDescricao(res.data.descricao)
+            setDataLanc(new Date(res.data.data_lancamento).toLocaleDateString())
+            setOrcamento(res.data.orcamento)
+            setLingOriginal(res.data.linguagem_original)
+            setStatus(res.data.status)
+            setSinopse(res.data.filme.sinopse)
+            setBilheteria(res.data.filme.bilheteria)
+            setDuracao(res.data.filme.duracao)
+            setImagem(res.data.imagem ? res.data.imagem.find(img => img.fl_poster).url : null)
+            setGenerosFilme(res.data.conteudo_genero.map((genre) => ({ value: genre.genero.id, label: genre.genero.nome })))
+        }
+        if(urlParams.id){
+        setLoading(true)
+        getMovie()
+        setLoading(false)
+        }
+    }, [])
 
+    const opcoes = generos.map((genero) => {
+        return { value: genero.id, label: genero.nome }
+    })
+
+    const urlParams = useParams()
 
     return (
         <>
@@ -66,19 +92,13 @@ export default function MovieForm() {
 
                         <div className="col-6">
                             <InputGroup style={{ marginTop: '24px' }}>
-                                <InputGroup.Text id="inputGroup-sizing-default">Genero</InputGroup.Text>
-                                
-                                <MDBSelect onChange={(ev) => {
-                                    setIdGenero(ev.target.value)
-                                }}
-                                    {
-                                        generos.map((genre) => (
-                                        data = {
-                                            [
-                                                { text: genre.nome, value: genre.id }
-                                            ]}
-                                    ))
-                                    }
+                                <InputGroup.Text id="inputGroup-sizing-default">Generos</InputGroup.Text>
+                                <Select
+                                    defaultValue={opcoes.filter(option => generosFilme.some(g=> g.value = option.value))}
+                                    options={opcoes}
+                                    className="basic-multi-select"
+                                    closeMenuOnSelect={false}
+                                    isMulti
                                 />
                             </InputGroup>
                         </div>
@@ -130,8 +150,8 @@ export default function MovieForm() {
                                     setStatus(ev.target.value)
                                 }}>
                                     <option>Selecione</option>
-                                    <option value="em producao">Em produção</option>
-                                    <option value="lancado">Lançado</option>
+                                    <option value="em producao" defaultValue={status}>Em produção</option>
+                                    <option value="lancado" defaultValue={status}>Lançado</option>
                                 </Form.Select>
                             </InputGroup>
                         </div>
@@ -157,43 +177,80 @@ export default function MovieForm() {
                         </div>
 
                         <Button disabled={loading} onClick={async (ev) => {
-                            ev.preventDefault();
-                            console.log("Clicou em salvar")
-                            setLoading(true);
-                            console.log("Resposta", imagem);
-                            apiClient.post('/filme', {
-                                titulo: nomeFilme,
-                                imagens: imagem[{ url: imagem, fl_poster: true }],
-                                descricao: descricao,
-                                data_lancamento: new Date(dataLanc).toISOString(),
-                                orcamento: parseFloat(orcamento),
-                                linguagem_original: lingOriginal,
-                                status: status,
-                                generos: [{ id: parseInt(IdGenero) }],
-                                duracao: parseFloat(duracao),
-                                sinopse: sinopse,
-                                bilheteria: parseFloat(bilheteria),
-                            }).then((res) => {
-                                console.log("Resposta", res);
-                                setLoading(false);
-                                setNomeFilme('');
-                                setDescricao('');
-                                setDataLanc('');
-                                setOrcamento('');
-                                setLingOriginal('');
-                                setStatus('');
-                                setBilheteria('');
-                                setSinopse('');
-                                setDuracao('');
-                                setImagem('');
-                                setLoading('');
-                                Swal.fire({
-                                    title: 'Filme cadastrado com sucesso!',
-                                    icon: 'success',
-                                    confirmButtonText: 'Ok',
-                                    confirmButtonColor: '#3085d6',
+                            if (urlParams) {
+                                ev.preventDefault();
+                                apiClient.put(`/filme/${urlParams.id}`, {
+                                    titulo: nomeFilme,
+                                    imagens: imagem[{ url: imagem, fl_poster: true }],
+                                    descricao: descricao,
+                                    data_lancamento: new Date(dataLanc).toISOString(),
+                                    orcamento: parseFloat(orcamento),
+                                    linguagem_original: lingOriginal,
+                                    status: status,
+                                    generos: generosFilme,
+                                    duracao: parseFloat(duracao),
+                                    sinopse: sinopse,
+                                    bilheteria: parseFloat(bilheteria),
+                                }).then((res) => {
+                                    console.log("Resposta", res);
+                                    setLoading(false);
+                                    setNomeFilme('');
+                                    setDescricao('');
+                                    setDataLanc('');
+                                    setOrcamento('');
+                                    setLingOriginal('');
+                                    setStatus('');
+                                    setBilheteria('');
+                                    setSinopse('');
+                                    setDuracao('');
+                                    setImagem('');
+                                    setLoading('');
+                                    Swal.fire({
+                                        title: 'Filme atualizado com sucesso!',
+                                        icon: 'success',
+                                        confirmButtonText: 'Ok',
+                                        confirmButtonColor: '#3085d6',
+                                    })
                                 })
-                            })
+                            } else {
+                                ev.preventDefault();
+                                console.log("Clicou em salvar")
+                                setLoading(true);
+                                console.log("Resposta", imagem);
+                                apiClient.post('/filme', {
+                                    titulo: nomeFilme,
+                                    imagens: imagem[{ url: imagem, fl_poster: true }],
+                                    descricao: descricao,
+                                    data_lancamento: new Date(dataLanc).toISOString(),
+                                    orcamento: parseFloat(orcamento),
+                                    linguagem_original: lingOriginal,
+                                    status: status,
+                                    generos: generosFilme,
+                                    duracao: parseFloat(duracao),
+                                    sinopse: sinopse,
+                                    bilheteria: parseFloat(bilheteria),
+                                }).then((res) => {
+                                    console.log("Resposta", res);
+                                    setLoading(false);
+                                    setNomeFilme('');
+                                    setDescricao('');
+                                    setDataLanc('');
+                                    setOrcamento('');
+                                    setLingOriginal('');
+                                    setStatus('');
+                                    setBilheteria('');
+                                    setSinopse('');
+                                    setDuracao('');
+                                    setImagem('');
+                                    setLoading('');
+                                    Swal.fire({
+                                        title: 'Filme cadastrado com sucesso!',
+                                        icon: 'success',
+                                        confirmButtonText: 'Ok',
+                                        confirmButtonColor: '#3085d6',
+                                    })
+                                })
+                            }
                         }} style={{ marginTop: '19x' }} className='mt-4'>{loading ? 'Aguarde...' : 'Salvar'}</Button>
                     </div>
                 </div>

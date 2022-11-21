@@ -74,7 +74,7 @@ function MovieCard(props) {
                 <Button onClick={() => navigate(`/movie/${props.id}`)} variant="primary">Ver detalhes</Button>
               </div>
               <div className='col-2'>
-                <Button className='display-flex justify-content-end' onClick={() => navigate(`/movie/${props.id}`)} variant="primary" ><BiEditAlt /></Button>
+                <Button className='display-flex justify-content-end' onClick={() => navigate(`/form/movie/${props.id}`)} variant="primary" ><BiEditAlt /></Button>
               </div>
             </div>
           </Card.Body>
