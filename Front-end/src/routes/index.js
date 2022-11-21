@@ -14,7 +14,6 @@ export default function AppRoutes() {
                 <Route element={<Home />} path="/" />
                 <Route element={<MovieDetails />} path="/movie/:id" />
                 <Route element={<GenreForm/>} path="/form/genre" />
-                <Route element={<MovieForm/>} path="/form/movie/:id" />
                 <Route element={<MovieForm/>} path="/form/movie" />
             </Routes>
         </BrowserRouter>)
